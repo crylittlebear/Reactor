@@ -7,8 +7,7 @@
 
 #include <string>
 
-// #define DEBUG
-#define INFO
+#define DEBUG
 
 #ifdef INFO
 #define LOG_INFO(logmsgFormat, ...) \

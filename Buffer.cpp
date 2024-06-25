@@ -3,7 +3,10 @@
 *	Data: 2024-6-25
 */
 
+#include <iostream>
+
 #include "Buffer.h"
+#include "Logger.h"
 
 Buffer::Buffer(std::size_t initSize) 
 	: data_(new char[initSize]), 
@@ -32,23 +35,28 @@ std::size_t Buffer::writableSize() const {
 }
 
 void Buffer::append(const std::string& str) {
+	LOG_INFO("Buffer::append(const std::string&)");
 	append(str.c_str());
 }
 
 void Buffer::append(const char* str) {
+	LOG_INFO("Buffer::append(const char*)");
 	append(str, strlen(str));
 }
 void Buffer::append(const char* str, std::size_t len) {
+	LOG_INFO("Buffer::append(const char*, size_t)");
 	// 首先保证有足够的可写空间
 	makeRoom(len);
 	memcpy(data_ + writePos_, str, len);
 }
 
 void Buffer::append(const Buffer& buf) {
+	LOG_INFO("Buffer::append(const Buffer&)");
 	append(buf.data_ + buf.readPos_,  buf.readableSize());
 }
 
 ssize_t Buffer::readFromFd(int fd) {
+	LOG_INFO("Buffer::readFromFd(int)");
 	char buf[65536];
 	struct iovec iov[2];
 	std::size_t writable = writableSize();
@@ -69,6 +77,7 @@ ssize_t Buffer::readFromFd(int fd) {
 }
 
 ssize_t Buffer::writeToFd(int fd) {
+	LOG_INFO("Buffer::writeToFd(int)");
 	int readable = readableSize();
 	ssize_t len = write(fd, data_ + readPos_, readable);
 	if (len < 0) {
@@ -79,7 +88,13 @@ ssize_t Buffer::writeToFd(int fd) {
 	return len;
 }
 
+void Buffer::printReadable() {
+	std::string tempStr(data_ + readPos_, readableSize());
+	std::cout << tempStr << std::endl;
+}
+
 void Buffer::makeRoom(std::size_t reqSize) {
+	LOG_INFO("Buffer::makeRoom(size_t)");
 	// 如果可写的空间大于需要写的空间大小
 	if (writableSize() >= reqSize) { return; }
 	// 如果合并后的可写空间大小大于等于需要写的空间大小

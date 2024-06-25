@@ -13,9 +13,11 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 
+const int initBufferSize = 10240;
+
 class Buffer {
 public:
-	Buffer(std::size_t initSize);
+	Buffer(std::size_t initSize = initBufferSize);
 	~Buffer();
 	
 	// 获取和设置成员
@@ -38,6 +40,9 @@ public:
 	// 从文件描述符中读写数据
 	ssize_t readFromFd(int fd);
 	ssize_t writeToFd(int fd);
+	
+	// 打印输出可读数据
+	void printReadable();
 
 private:
 	// 检查可写容量是否够写，如果不够重新分配内存
