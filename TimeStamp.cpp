@@ -1,3 +1,8 @@
+/**
+*	Author: crylittlebear
+*	Data: 2024-6-25
+*/
+
 #include "TimeStamp.h"
 
 std::string TimeStamp::now() {
